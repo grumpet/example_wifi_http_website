@@ -7,7 +7,7 @@ import io
 import base64
 from dotenv import load_dotenv
 import os
-
+#loads the environment variables from the .env file
 load_dotenv()
 
 app = Flask(__name__)
