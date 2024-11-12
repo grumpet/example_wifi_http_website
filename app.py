@@ -60,7 +60,6 @@ def home():
 def results():
     if 'name' not in session:
         return redirect(url_for('home'))
-    
     plot_url = generate_pie_chart()
     return render_template('results.html', plot_url=plot_url, user_data=user_data)
 
