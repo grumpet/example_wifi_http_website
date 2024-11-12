@@ -4,13 +4,37 @@
     <meta charset="UTF-8">
     <title>Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const socket = io();
+
+            socket.on('update_results', (data) => {
+                const user_data = data.user_data;
+                const plot_url = data.plot_url;
+                
+                // Update participants list
+                const participantsList = document.getElementById('participants-list');
+                participantsList.innerHTML = '';
+                user_data.forEach(user => {
+                    const li = document.createElement('li');
+                    li.textContent = `${user.name} prefers ${user.preference}`;
+                    participantsList.appendChild(li);
+                });
+
+                // Update pie chart
+                const pieChart = document.getElementById('pie-chart');
+                pieChart.src = `data:image/png;base64,${plot_url}`;
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="container">
         <h1>Survey Results</h1>
-        <img src="data:image/png;base64,{{ plot_url }}" alt="Pie Chart">
+        <img id="pie-chart" src="data:image/png;base64,{{ plot_url }}" alt="Pie Chart">
         <h2>Participants</h2>
-        <ul>
+        <ul id="participants-list">
             {% for user in user_data %}
                 <li>{{ user.name }} prefers {{ user.preference }}</li>
             {% endfor %}
